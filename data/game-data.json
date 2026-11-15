@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "tokens": {
+    "e78b334265fa3de846f9f0803b4397a9d09fe5b241de2901": "ef11c68a-5548-4ab9-92f5-23159eda4a71",
+    "707842d46dc8ee331af8c5a2453c99fa1000f18e47038d16": "a03465fd-9211-4aa8-a768-ef88dd223633"
+  },
+  "players": {
+    "ef11c68a-5548-4ab9-92f5-23159eda4a71": {
+      "id": "ef11c68a-5548-4ab9-92f5-23159eda4a71",
+      "name": "Bot Faucon",
+      "avatar": "bolt",
+      "color": "moss",
+      "wins": 1,
+      "losses": 0,
+      "matches": 1,
+      "createdAt": 1794734518900,
+      "lastSeenAt": 1794734518900
+    },
+    "a03465fd-9211-4aa8-a768-ef88dd223633": {
+      "id": "a03465fd-9211-4aa8-a768-ef88dd223633",
+      "name": "Lucky Raven",
+      "avatar": "leaf",
+      "color": "coral",
+      "wins": 0,
+      "losses": 1,
+      "matches": 1,
+      "createdAt": 1794734621824,
+      "lastSeenAt": 1794734644153
+    }
+  },
+  "matches": [
+    {
+      "id": "87fe32b5-abdc-4966-bce9-76c8e49a1c0d",
+      "mode": "quick",
+      "goal": 5,
+      "winnerId": "ef11c68a-5548-4ab9-92f5-23159eda4a71",
+      "reason": "score",
+      "rounds": 10,
+      "players": [
+        {
+          "id": "ef11c68a-5548-4ab9-92f5-23159eda4a71",
+          "name": "Bot Faucon",
+          "score": 5
+        },
+        {
+          "id": "a03465fd-9211-4aa8-a768-ef88dd223633",
+          "name": "Lucky Raven",
+          "score": 2
+        }
+      ],
+      "endedAt": 1794734687580
+    }
+  ]
+}

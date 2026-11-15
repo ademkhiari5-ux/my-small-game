@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors · Solo & 1v1</title>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="online.css">
+</head>
+<body>
+  <main class="game">
+
+    <!-- Mode switcher -->
+    <header class="topbar">
+      <div class="mode-tabs" role="tablist" aria-label="Game mode">
+        <button class="mode-tab mode-tab--on" type="button" id="tab-solo" role="tab" aria-selected="true">
+          Solo practice
+        </button>
+        <button class="mode-tab" type="button" id="tab-online" role="tab" aria-selected="false">
+          1v1 online
+        </button>
+      </div>
+      <span class="net-pill" id="net-status" data-state="idle">Offline</span>
+    </header>
+
+    <!-- ================= SOLO (unchanged game) ================= -->
+    <div class="view" id="view-solo">
+
+      <!-- Title -->
+      <header class="header">
+        <h1 class="header__title">Rock <span class="header__dot">·</span> Paper <span class="header__dot">·</span> Scissors</h1>
+        <p class="header__subtitle">Play against the computer — first to 5 points wins</p>
+      </header>
+
+      <!-- Rules -->
+      <section class="card rules">
+        <h2 class="rules__title">How to play</h2>
+        <ul class="rules__list">
+          <li><strong>Rock</strong> beats scissors, <strong>scissors</strong> beats paper, <strong>paper</strong> beats rock.</li>
+          <li>Click one of the three hands. The computer picks at the same time.</li>
+          <li>Win a round = +1 point. The same hand = a tie, nobody scores.</li>
+          <li>First to <strong>5 points</strong> wins. Losing breaks your win streak.</li>
+        </ul>
+      </section>
+
+      <!-- Scores -->
+      <section class="board">
+        <div class="board__cell">
+          <span class="board__label">You</span>
+          <span class="board__value" id="player-score">0</span>
+        </div>
+        <div class="board__cell">
+          <span class="board__label">Computer</span>
+          <span class="board__value" id="computer-score">0</span>
+        </div>
+        <div class="board__cell board__cell--best">
+          <span class="board__label">Best streak</span>
+          <span class="board__value" id="best-streak">0</span>
+        </div>
+      </section>
+
+      <!-- Arena: what you picked vs what the computer picked -->
+      <section class="arena" id="arena">
+        <div class="hand">
+          <div class="hand__slot" id="player-slot">
+            <span class="hand__placeholder">?</span>
+          </div>
+          <span class="hand__name" id="player-name">Your pick</span>
+        </div>
+
+        <span class="arena__vs">vs</span>
+
+        <div class="hand">
+          <div class="hand__slot" id="computer-slot">
+            <span class="hand__placeholder">?</span>
+          </div>
+          <span class="hand__name" id="computer-name">Computer</span>
+        </div>
+      </section>
+
+      <!-- Result message -->
+      <p class="message" id="message">Pick a hand to start the match.</p>
+
+      <!-- The three choices -->
+      <section class="choices" id="choices">
+        <button class="choice" type="button" data-choice="rock">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M13 27L15 16l9-7 10 2 6 10-4 11-10 7-10-3z"
+                  stroke="currentColor" stroke-width="2.6" fill="none"
+                  stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M24 9l4 11 12 1M28 20l-6 12"
+                  stroke="currentColor" stroke-width="2.6" fill="none"
+                  stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          <span class="choice__label">Rock</span>
+        </button>
+
+        <button class="choice" type="button" data-choice="paper">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect x="11" y="7" width="26" height="34" rx="5"
+                  stroke="currentColor" stroke-width="2.6" fill="none"/>
+            <path d="M18 17h12M18 24h12M18 31h7"
+                  stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span class="choice__label">Paper</span>
+        </button>
+
+        <button class="choice" type="button" data-choice="scissors">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M16 8l14 21M32 8L18 29"
+                  stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            <circle cx="16" cy="37" r="4.6" stroke="currentColor" stroke-width="2.6" fill="none"/>
+            <circle cx="32" cy="37" r="4.6" stroke="currentColor" stroke-width="2.6" fill="none"/>
+          </svg>
+          <span class="choice__label">Scissors</span>
+        </button>
+      </section>
+
+      <button class="restart" type="button" id="restart">Restart game</button>
+    </div>
+
+    <!-- ================= 1v1 ONLINE ================= -->
+    <div class="view view--online" id="view-online" hidden>
+
+      <!-- ---------- 1. Lobby ---------- -->
+      <section class="online-screen" id="screen-lobby">
+        <div class="card profile-card">
+          <div class="profile-card__avatar" id="lobby-avatar"></div>
+          <div class="profile-card__body">
+            <span class="profile-card__eyebrow">Your fighter</span>
+            <h2 class="profile-card__name" id="lobby-preview-name">Player</h2>
+            <span class="profile-card__record" id="record-text">New challenger</span>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field__label">Display name</span>
+          <input class="field__input" id="name-input" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Your name">
+        </label>
+
+        <div class="picker-block">
+          <span class="field__label">Avatar</span>
+          <div class="swatches" id="avatar-picker"></div>
+        </div>
+
+        <div class="picker-block">
+          <span class="field__label">Colour</span>
+          <div class="color-row" id="color-picker"></div>
+        </div>
+
+        <div class="lobby-actions">
+          <button class="btn btn--primary" type="button" id="find-match">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Find opponent
+          </button>
+
+          <button class="btn btn--ghost" type="button" id="create-room">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+              <path d="M9 4h10v16H9M9 12h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M5 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Create private room
+          </button>
+
+          <div class="join-row">
+            <input class="field__input field__input--code" id="room-code-input" maxlength="6"
+                   autocomplete="off" spellcheck="false" placeholder="ROOM CODE" aria-label="Room code">
+            <button class="btn btn--dark" type="button" id="join-room">Join</button>
+          </div>
+        </div>
+
+        <p class="inline-error" id="lobby-error" hidden></p>
+
+        <div class="lobby-meta">
+          <span id="online-count">0 online</span>
+          <span class="lobby-meta__dot">·</span>
+          <span>First to 5 wins</span>
+        </div>
+
+        <div class="card leaderboard" id="leaderboard-card" hidden>
+          <h3 class="leaderboard__title">Top players</h3>
+          <div class="leaderboard__list" id="leaderboard-list"></div>
+        </div>
+
+        <p class="fair-play">
+          Scores, hands and winners are decided on the server — nothing on this page can change them.
+        </p>
+      </section>
+
+      <!-- ---------- 2. Searching ---------- -->
+      <section class="online-screen searching" id="screen-searching" hidden>
+        <div class="radar" aria-hidden="true">
+          <span class="radar__ring"></span>
+          <span class="radar__ring radar__ring--2"></span>
+          <span class="radar__core"></span>
+        </div>
+        <h2 class="searching__title">Finding an opponent…</h2>
+        <p class="searching__status" id="searching-status">Looking for someone to play…</p>
+        <p class="searching__timer" id="searching-timer">0:00</p>
+        <button class="btn btn--ghost" type="button" id="cancel-search">Cancel search</button>
+      </section>
+
+      <!-- ---------- 3. Private room ---------- -->
+      <section class="online-screen room" id="screen-room" hidden>
+        <p class="room__eyebrow">Private room</p>
+        <div class="room__code-row">
+          <span class="room__code" id="room-code">------</span>
+          <button class="btn btn--tiny" type="button" id="copy-code">Copy</button>
+        </div>
+        <p class="room__hint" id="room-hint">Share this code with a friend</p>
+
+        <div class="room__players" id="room-players"></div>
+
+        <button class="btn btn--ghost" type="button" id="cancel-room">Close room</button>
+        <p class="inline-error" id="room-error" hidden></p>
+      </section>
+
+      <!-- ---------- 4. Match ---------- -->
+      <section class="online-screen match" id="screen-match" hidden>
+        <div class="match-top">
+          <span class="match-top__round" id="round-label">Get ready</span>
+          <span class="match-top__goal" id="goal-text">First to 5</span>
+        </div>
+
+        <div class="versus">
+          <div class="pcard" id="card-you"></div>
+          <div class="versus__tag">vs</div>
+          <div class="pcard" id="card-opponent"></div>
+        </div>
+
+        <div class="round-bar">
+          <div class="round-bar__fill" id="round-timer-fill"></div>
+          <span class="round-bar__time" id="round-timer-text">—</span>
+        </div>
+
+        <section class="arena online-arena" id="online-arena">
+          <div class="hand">
+            <div class="hand__slot" id="arena-you-slot">
+              <span class="hand__placeholder">?</span>
+            </div>
+            <span class="hand__name" id="arena-you-name">You</span>
+          </div>
+
+          <span class="arena__vs">vs</span>
+
+          <div class="hand">
+            <div class="hand__slot" id="arena-opponent-slot">
+              <span class="hand__placeholder">?</span>
+            </div>
+            <span class="hand__name" id="arena-opponent-name">Opponent</span>
+          </div>
+        </section>
+
+        <p class="message online-message" id="online-message">Get ready…</p>
+
+        <section class="choices" id="online-choices">
+          <button class="choice" type="button" data-choice="rock">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M13 27L15 16l9-7 10 2 6 10-4 11-10 7-10-3z"
+                    stroke="currentColor" stroke-width="2.6" fill="none"
+                    stroke-linejoin="round" stroke-linecap="round"/>
+              <path d="M24 9l4 11 12 1M28 20l-6 12"
+                    stroke="currentColor" stroke-width="2.6" fill="none"
+                    stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+            <span class="choice__label">Rock</span>
+          </button>
+
+          <button class="choice" type="button" data-choice="paper">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <rect x="11" y="7" width="26" height="34" rx="5"
+                    stroke="currentColor" stroke-width="2.6" fill="none"/>
+              <path d="M18 17h12M18 24h12M18 31h7"
+                    stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="choice__label">Paper</span>
+          </button>
+
+          <button class="choice" type="button" data-choice="scissors">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M16 8l14 21M32 8L18 29"
+                    stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+              <circle cx="16" cy="37" r="4.6" stroke="currentColor" stroke-width="2.6" fill="none"/>
+              <circle cx="32" cy="37" r="4.6" stroke="currentColor" stroke-width="2.6" fill="none"/>
+            </svg>
+            <span class="choice__label">Scissors</span>
+          </button>
+        </section>
+
+        <button class="restart restart--ghost" type="button" id="leave-match">Leave match</button>
+      </section>
+
+      <!-- ---------- 5. Countdown ---------- -->
+      <div class="countdown" id="countdown-overlay" hidden aria-live="assertive">
+        <span class="countdown__value" id="countdown-value">3</span>
+      </div>
+
+      <!-- ---------- 6. Result ---------- -->
+      <div class="result" id="result-overlay" hidden>
+        <div class="result__card" role="dialog" aria-modal="true" aria-labelledby="result-title">
+          <p class="result__eyebrow" id="result-eyebrow">Final score</p>
+          <h2 class="result__title" id="result-title">You win!</h2>
+          <p class="result__score" id="result-score">5 – 0</p>
+          <div class="result__players" id="result-players"></div>
+          <p class="result__note" id="result-note"></p>
+          <div class="result__actions">
+            <button class="btn btn--primary" type="button" id="rematch">Rematch</button>
+            <button class="btn btn--ghost" type="button" id="leave-result">Leave match</button>
+          </div>
+          <p class="result__hint" id="rematch-hint"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="conn-banner" id="conn-banner" hidden></div>
+
+  <script src="main.js"></script>
+  <script type="module" src="js/online/app.js"></script>
+</body>
+</html>

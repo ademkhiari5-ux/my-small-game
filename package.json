@@ -1,0 +1,17 @@
+{
+  "name": "rock-paper-scissors-1v1",
+  "version": "1.0.0",
+  "description": "Rock Paper Scissors — solo practice plus a realtime 1v1 mode with matchmaking and private rooms",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test tests/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ws": "^8.23.0"
+  }
+}
